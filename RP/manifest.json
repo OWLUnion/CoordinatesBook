@@ -1,0 +1,46 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "坐标记录本-RP",
+		"description": "插件 §lCoordinatesBook §r的附加包, 由 §l§bO§fW§aL§r §lUnion§r 制作",
+		"uuid": "421d88cd-2a14-48e2-9a07-2f15da799e93",
+		"version": [
+			1,
+			0,
+			0
+		],
+		"min_engine_version": [
+			1,
+			20,
+			10
+		],
+		"pack_scope": "world"
+	},
+	"modules": [
+		{
+			"type": "resources",
+			"uuid": "a5736c83-de18-4ee0-b1ac-d489dd5b1171",
+			"version": [
+				1,
+				0,
+				0
+			]
+		}
+	],
+  "metadata": {
+  		"authors": [
+  		  "AlexXuCN",
+  		  "ZhuShu1225"
+  		],
+  		"dependencies": [
+		   {
+			 "version": [
+				1,
+				0,
+				0
+			 ],
+			"uuid": "78a03952-f467-47d9-8c7c-5d0bb88df0fe"
+		  }
+  	]
+  }
+}

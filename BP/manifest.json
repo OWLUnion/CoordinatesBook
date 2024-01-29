@@ -1,0 +1,42 @@
+    {
+	"format_version": 2,
+	"header": {
+		"name": "坐标记录本-BP",
+		"description": "插件 §lCoordinatesBook §r的附加包, 由 §l§bO§fW§aL§r §lUnion§r 制作",
+		"uuid": "78a03952-f467-47d9-8c7c-5d0bb88df0fe",
+		"version": [
+			1,
+			0,
+			0
+		],
+		"min_engine_version": [
+			1,
+			20,
+			10
+		],
+		"pack_scope": "world"
+	},
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "6a8a0e72-2e05-4cfc-8322-13a88726730b",
+			"version": [
+				1,
+				0,
+				0
+			]
+		}
+	],
+	"metadata": {
+	  "dependencies": [
+		  {
+			"version": [
+				1,
+				0,
+				0
+			],
+			"uuid": "421d88cd-2a14-48e2-9a07-2f15da799e93"
+		  }
+	  ]
+  }
+}
