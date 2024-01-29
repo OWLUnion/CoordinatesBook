@@ -11,11 +11,6 @@ function showBook(pl,it) {
             "物品数据类型错误：" + data.getTypeOf("Coordinates") + "\n" + data.getTag("Coordinates").toString(2),
             ["确定"],[],()=>{})
     }
-    
-}
-
-function wrongData(pl,data) {
-    
 }
 
 log(mc.getOnlinePlayers()[0].getHand().getNbt().getTag("Count").toString(4))
