@@ -9,7 +9,10 @@
             "minecraft:icon": {
                 "texture": "coordinates_book"
             },
-            "minecraft:max_stack_size": 1
+            "minecraft:max_stack_size": 1,
+            "minecraft:display_name": {
+                "value": "tile.item.owl:coordinates_book"
+            }
         }
     }
 }
