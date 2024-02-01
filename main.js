@@ -20,7 +20,7 @@ const initialPageList = new NbtList([
     })
 ])
 
-mc.listen(onUseItem,useBook);
+mc.listen("onUseItem",useBook);
 
 function dimIdToDimName(dimid) {
     switch (dim) {
@@ -37,7 +37,10 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    data.getKeys().includes("cord_pages") || data.setTag("cord_pages", initialPageList);
+    if (!data.getKeys().includes("cord_pages")) {
+        data.setTag("cord_pages", initialPageList);
+        it.setNbt(data);
+    }
     if (data.getTypeOf("cord_pages") != NBT.List) {
         wrongTypeForm(pl,data.getTag("cord_pages"));
         return;
