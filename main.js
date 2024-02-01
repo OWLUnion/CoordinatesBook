@@ -42,20 +42,8 @@ function useBook(pl,it) {
         it.setNbt(data);
         data = it.getNbt();
     }
-    if (data.getTypeOf("cord_pages") != NBT.List) {
-        wrongTypeForm(pl, data.getTag("cord_pages"));
-        return;
-    }
 
     showBook(pl);
-}
-
-function wrongTypeForm(pl,nbt) {
-    pl.sendSimpleForm("数据损坏",
-            "错误的数据类型：" + nbt.getType() + "\n" + nbt.toString(2),
-            ["确定"],[],()=>{}
-        );
-    return;
 }
 
 function unableToAddForm(pl,type) {
