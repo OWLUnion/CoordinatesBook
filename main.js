@@ -40,13 +40,14 @@ function useBook(pl,it) {
     if (!data.getKeys().includes("cord_pages")) {
         data.setTag("cord_pages", initialPageList);
         it.setNbt(data);
+        data = it.getNbt();
     }
     if (data.getTypeOf("cord_pages") != NBT.List) {
-        wrongTypeForm(pl,data.getTag("cord_pages"));
+        wrongTypeForm(pl, data.getTag("cord_pages"));
         return;
     }
 
-    showBook(pl,it);
+    showBook(pl);
 }
 
 function wrongTypeForm(pl,nbt) {
@@ -74,7 +75,8 @@ function unableToAddForm(pl,type) {
     }
 }
 
-function showBook(pl,it) {
+function showBook(pl) {
+    let it = pl.getHand();
     let data = it.getNbt().getTag("cord_pages")
     let form = mc.newSimpleForm()
     form.setTitle(it.name).setContent("")
