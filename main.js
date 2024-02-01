@@ -37,10 +37,10 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    if (!data.getKeys().includes("cord_pages")) {
+    if (data.getTag("cord_pages") === null) {
         data.setTag("cord_pages", initialPageList);
-        it.setNbt(data);
-        data = it.getNbt();
+        pl.getHand().setNbt(data);
+        data = pl.getHand().getNbt();
     }
 
     showBook(pl);
@@ -65,10 +65,11 @@ function unableToAddForm(pl,type) {
 
 function showBook(pl) {
     let it = pl.getHand();
-    let data = it.getNbt().getTag("cord_pages")
-    let form = mc.newSimpleForm()
+    let dataTag = it.getNbt().getTag("cord_pages");
+    let data = dataTag.toObject();
+    let form = mc.newSimpleForm();
     form.setTitle(it.name).setContent("")
-    for (let page = 0;page < data.getSize();page++) form.addButton(data.getTag(page).getTag("name").get());
+    for (let page in data) form.addButton(data[page].name);
     fm.addButton("添加页面").addButton("复制本书");
     pl.sendForm(form,(player,id)=>{
         handlePageSelection(player,id,it)
