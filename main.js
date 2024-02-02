@@ -20,7 +20,7 @@ const initialPageList = new NbtList([
     })
 ])
 
-mc.listen("onUseItemOn",useBook);
+mc.listen("onUseItem",useBook);
 
 function dimIdToDimName(dimid) {
     switch (dim) {
@@ -40,9 +40,9 @@ function useBook(pl,it) {
     data.setTag("cord_pages", initialPageList);
     pl.getHand().set(mc.newItem(data));
     data = pl.getHand().getNbt();
-    
-
-    showBook(pl);
+    pl.tell(data.toString());
+    //showBook(pl);
+    return true;
 }
 
 function unableToAddForm(pl,type) {
@@ -52,13 +52,13 @@ function unableToAddForm(pl,type) {
                 "已达上限: ", config.get("maxPages"),
                         ["确定"], [], () => {}
             );
-            return;
+            return true;
         case "entry":
             pl.sendSimpleForm("无法增加条目",
                 "已达上限: ", config.get("maxEntriesPerPage"),
                         ["确定"], [], () => {}
             );
-            return;
+            return true;
     }
 }
 
@@ -71,11 +71,12 @@ function showBook(pl) {
     for (let page in data) form.addButton(data[page].name);
     fm.addButton("添加页面").addButton("复制本书");
     pl.sendForm(form,(player,id)=>{
-        handlePageSelection(player,id,it)
+        handlePageSelection(player,id);
     });
 }
 
-function handlePageSelection(pl,id,it) {
+function handlePageSelection(pl,id) {
+    let it = pl.getHand();
     let data = it.getNbt();
     let pages = getTag("cord_pages");
     if (id === null) return;
