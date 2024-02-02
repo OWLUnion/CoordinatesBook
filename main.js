@@ -37,8 +37,10 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    data.setTag("cord_pages", initialPageList);
-    pl.getHand().set(mc.newItem(data));
+    let dataTag = data.getTag("tag");
+    dataTag.setTag("cords", initialPageList);
+    data.setTag("tag",dataTag);
+    pl.getHand().setTag(data);
     data = pl.getHand().getNbt();
     pl.tell(data.toString());
     //showBook(pl);
@@ -64,7 +66,7 @@ function unableToAddForm(pl,type) {
 
 function showBook(pl) {
     let it = pl.getHand();
-    let dataTag = it.getNbt().getData("cord_pages");
+    let dataTag = it.getNbt().getData("cords");
     let data = dataTag.toObject();
     let form = mc.newSimpleForm();
     form.setTitle(it.name).setContent("")
@@ -78,7 +80,7 @@ function showBook(pl) {
 function handlePageSelection(pl,id) {
     let it = pl.getHand();
     let data = it.getNbt();
-    let pages = getTag("cord_pages");
+    let pages = getTag("cords");
     if (id === null) return;
     if (id === pages.getSize()-1) {
         if(data.setTag(pages.addTag(new NbtCompound({
@@ -108,7 +110,7 @@ function handlePageSelection(pl,id) {
 
 function handleEntrySelection(pl,id,pageid,it) {
     let data = it.getNbt();
-    let pages = getTag("cord_pages");
+    let pages = getTag("cords");
     let page = pages.getTag(pageid).getTag("data");
     if (id === null) return;
     switch (id) {
