@@ -37,10 +37,11 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    data.setTag("cord_pages", initialPageList);
-    pl.getHand().set(mc.newItem(data));
-    data = pl.getHand().getNbt();
-    
+    if (data.getTag("cord_pages") === null) {
+        data.setTag("cord_pages", initialPageList);
+        pl.tell(pl.getHand().setNbt(data));
+        data = pl.getHand().getNbt();
+    }
 
     showBook(pl);
 }
