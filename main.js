@@ -20,7 +20,7 @@ const initialPageList = new NbtList([
     })
 ])
 
-mc.listen("onUseItem",useBook);
+mc.listen("onUseItemOn",useBook);
 
 function dimIdToDimName(dimid) {
     switch (dim) {
