@@ -39,7 +39,7 @@ function useBook(pl,it) {
     let data = it.getNbt();
     if (data.getTag("cord_pages") === null) {
         data.setTag("cord_pages", initialPageList);
-        pl.getHand().setNbt(data);
+        pl.tell(pl.getHand().setNbt(data));
         data = pl.getHand().getNbt();
     }
 
@@ -65,7 +65,7 @@ function unableToAddForm(pl,type) {
 
 function showBook(pl) {
     let it = pl.getHand();
-    let dataTag = it.getNbt().getTag("cord_pages");
+    let dataTag = it.getNbt().getData("cord_pages");
     let data = dataTag.toObject();
     let form = mc.newSimpleForm();
     form.setTitle(it.name).setContent("")
