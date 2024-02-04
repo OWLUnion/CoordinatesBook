@@ -37,10 +37,9 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    let dataTag = data.getTag("tag");
-    dataTag.setTag("cords", initialPageList);
-    data.setTag("tag",dataTag);
-    pl.getHand().setTag(data);
+    data.getTag("tag").setTag("cords", initialPageList);
+    //data.setTag("tag",dataTag);
+    pl.getHand().setTag(data.removeTag("ench"));
     data = pl.getHand().getNbt();
     pl.tell(data.toString());
     //showBook(pl);
