@@ -40,9 +40,9 @@ function useBook(pl,it) {
     data.getTag("tag").setTag("cords", initialPageList);
     data.getTag("tag").removeTag("ench");
     //data.setTag("tag",dataTag);
-    pl.getHand().setTag(data);
-    data = pl.getHand().getNbt();
-    pl.tell(data.toString());
+    //pl.getHand().setTag(data);
+    
+    pl.tell(pl.getHand().getNbt().toString());
     //showBook(pl);
     return true;
 }
