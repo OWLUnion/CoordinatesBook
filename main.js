@@ -39,9 +39,7 @@ function useBook(pl,it) {
     let data = it.getNbt();
     data.getTag("tag").setTag("cords", initialPageList);
     data.getTag("tag").removeTag("ench");
-    //data.setTag("tag",dataTag);
-    //pl.getHand().setTag(data);
-    
+    it.setTag(data);
     pl.tell(pl.getHand().getNbt().toString());
     //showBook(pl);
     return true;
