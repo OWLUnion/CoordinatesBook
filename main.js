@@ -74,7 +74,7 @@ function showBook(pl) {
     let form = mc.newSimpleForm();
     form.setTitle(it.name).setContent("");
     for (let page in data) form.addButton(data[page].name);
-    fm.addButton("添加页面").addButton("复制本书");
+    form.addButton("添加页面").addButton("复制本书");
     pl.sendForm(form,(player,id)=>{
         //handlePageSelection(player,id);
     });
