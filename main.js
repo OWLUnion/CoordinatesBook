@@ -38,7 +38,7 @@ function dimIdToDimName(dimid) {
 function useBook(pl,it) {
     let data = it.getNbt();
     if (!data.getKeys().includes("tag")) {
-        pl.tell(Format.DarkPurple + "不可用：需要任意附魔" + Format.Clear,5);
+        pl.tell(Format.DarkPurple + "不可用: 需要任意附魔" + Format.Clear,5);
         return true;
     } else if (!data.getTag("tag").getKeys().includes("cords")) {
         data.getTag("tag").setTag("cords", initialPageList);
@@ -70,7 +70,7 @@ async function unableToAddForm(pl,type) {
 
 function showBook(pl) {
     let it = pl.getHand();
-    let data = it.getNbt().getTag("tag").getTag("cords").toObject();
+    let data = it.getNbt().getTag("tag").getTag("cords").toArray();
     let form = mc.newSimpleForm();
     form.setTitle(it.name).setContent("");
     for (let page in data) form.addButton(data[page].name);
