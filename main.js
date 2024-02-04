@@ -37,10 +37,10 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    if (data.getKeys().includes("tag")) {
+    if (!data.getKeys().includes("tag")) {
         pl.tell(Format.DarkPurple + "不可用：需要任意附魔" + Format.Clear,5);
         return true;
-    } else if (data.getTag("tag").getKeys().includes("cords")) {
+    } else if (!data.getTag("tag").getKeys().includes("cords")) {
         data.getTag("tag").setTag("cords", initialPageList);
         data.getTag("tag").removeTag("ench");
         pl.getHand().setNbt(data);
