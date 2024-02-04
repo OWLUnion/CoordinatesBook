@@ -37,15 +37,22 @@ function dimIdToDimName(dimid) {
 
 function useBook(pl,it) {
     let data = it.getNbt();
-    data.getTag("tag").setTag("cords", initialPageList);
-    data.getTag("tag").removeTag("ench");
-    pl.getHand().setNbt(data);
-    pl.tell(pl.getHand().getNbt().toString());
-    //showBook(pl);
+    if (data.getTypeOf("tag") === null) {
+        pl.tell(Format.DarkPurple + "不可用：需要任意附魔" + Format.Clear,5);
+        return;
+    }
+    if (data.getTag("tag").getTypeOf("cords") === null) {
+        data.getTag("tag").setTag("cords", initialPageList);
+        data.getTag("tag").removeTag("ench");
+        pl.getHand().setNbt(data);
+        pl.refreshItems();
+        pl.tell(pl.getHand().getNbt().toString());
+    }
+    showBook(pl);
     return true;
 }
 
-function unableToAddForm(pl,type) {
+async function unableToAddForm(pl,type) {
     switch (type) {
         case "page":
             pl.sendSimpleForm("无法增加页面",
@@ -64,15 +71,15 @@ function unableToAddForm(pl,type) {
 
 function showBook(pl) {
     let it = pl.getHand();
-    let dataTag = it.getNbt().getData("cords");
-    let data = dataTag.toObject();
+    let data = it.getNbt().getTag("tag").getTag("cords").toObject();
     let form = mc.newSimpleForm();
-    form.setTitle(it.name).setContent("")
+    form.setTitle(it.name).setContent("");
     for (let page in data) form.addButton(data[page].name);
     fm.addButton("添加页面").addButton("复制本书");
     pl.sendForm(form,(player,id)=>{
-        handlePageSelection(player,id);
+        //handlePageSelection(player,id);
     });
+    return true;
 }
 
 function handlePageSelection(pl,id) {
