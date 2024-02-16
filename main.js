@@ -105,7 +105,7 @@ function handlePageSelection(pl,id) {
             return;
         }
         data.getTag("tag").getTag("cords").addTag(new NbtCompound({
-            "name": new NbtString("第 " + id + " 页"),
+            "name": new NbtString("第 " + (id + 1) + " 页"),
             "pages": new NbtList([])
             }));
         pl.getHand().setNbt(data);
