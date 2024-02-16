@@ -99,7 +99,7 @@ function handlePageSelection(pl,id) {
     if (id === null) return;
     let data = pl.getHand().getNbt();
     let pages = data.getTag("tag").getTag("cords");
-    if (id === pages.getSize()-1) {
+    if (id === pages.getSize()) {
         if (pages.getSize() === config.get("maxPages")) {
             unableToAddForm.page(pl);
             return;
@@ -111,7 +111,7 @@ function handlePageSelection(pl,id) {
         pl.getHand().setNbt(data);
         pl.refreshItems();
     }
-    if (id === pages.getSize()) {
+    if (id === pages.getSize()+1) {
         pl.tell("copy the book")
         // copy the book
         return;
@@ -123,7 +123,7 @@ function handlePageSelection(pl,id) {
         form.addButton(page.data[i].name)
     }
     fm.addButton("添加条目").addButton("重命名页面：" + page.name).addButton("删除页面");
-    pl.sendForm(form, (player,_id) => console.log(id) /*handleEntrySelection(player,_id,id)*/ );
+    pl.sendForm(form, (player,_id) => handleEntrySelection(player,_id,id) );
 }
 
 function handleEntrySelection(pl,id,pageid) {
@@ -132,7 +132,7 @@ function handleEntrySelection(pl,id,pageid) {
     let pages = data.getTag("tag").getTag("cords");
     let page = pages.getTag(pageid).getTag("data");
     switch (id) {
-        case page.getSize() - 2:
+        case page.getSize():
             // Add Entry
             if (page.getSize() === config.get("maxEntriesPerPage")) {
                 unableToAddForm.entry(pl);
@@ -145,11 +145,11 @@ function handleEntrySelection(pl,id,pageid) {
             pl.getHand().setNbt(data);
             pl.refreshItems();
             return;
-        case page.getSize() - 1:
+        case page.getSize() + 1:
             pl.tell("Rename Page");
             //rename page
             return;
-        case page.getSize():
+        case page.getSize() + 2:
             pl.tell("delete page")
             //delete page
             return;
