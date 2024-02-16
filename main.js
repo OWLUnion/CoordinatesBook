@@ -1,3 +1,24 @@
+ll.registerPlugin(
+    "CoordinatesBook",
+    "坐标记录本",
+    [1,0,0,Version.Release],
+    {
+        author: "AlexXuCN",
+        url: "http://github.com/OWLUnion/CoordinatesBook"
+    }
+);
+
+ll.require(
+  'NavigationAPI.lls.js',
+  'https://www.lgc2333.top/llse/NavigationAPI.min.lls.js'
+);
+
+const navApi = {
+    newTask: ll.import('NavAPI_newTask'),
+    clearTask: ll.import('NavAPI_clearTask'),
+    hasTask: ll.import('NavAPI_hasTask')
+}
+
 const config = new JsonConfigFile("./plugins/AlexXuCN/CoordinatesBook.json",JSON.stringify({
     item: "owl:coordinates_book",
     maxPages: 5,
@@ -39,7 +60,7 @@ function useBook(pl,it) {
     let data = it.getNbt();
     if (!data.getKeys().includes("tag")) {
         pl.tell(Format.DarkPurple + "不可用: 需要任意附魔" + Format.Clear,5);
-        return true;
+        return;
     } else if (!data.getTag("tag").getKeys().includes("cords")) {
         data.getTag("tag").setTag("cords", initialPageList);
         data.getTag("tag").removeTag("ench");
@@ -48,25 +69,20 @@ function useBook(pl,it) {
         pl.tell(pl.getHand().getNbt().toString());
     }
     showBook(pl);
-    return true;
+    return;
 }
 
-async function unableToAddForm(pl,type) {
-    switch (type) {
-        case "page":
-            pl.sendSimpleForm("无法增加页面",
+var unableToAddForm = {
+    page: async pl => pl.sendSimpleForm("无法增加页面",
                 "已达上限: ", config.get("maxPages"),
                         ["确定"], [], () => {}
-            );
-            return true;
-        case "entry":
-            pl.sendSimpleForm("无法增加条目",
+            ),
+    entry: async pl => pl.sendSimpleForm("无法增加条目",
                 "已达上限: ", config.get("maxEntriesPerPage"),
                         ["确定"], [], () => {}
-            );
-            return true;
-    }
+            )
 }
+
 
 function showBook(pl) {
     let it = pl.getHand();
@@ -75,52 +91,59 @@ function showBook(pl) {
     form.setTitle(it.name).setContent("");
     for (let page in data) form.addButton(data[page].name);
     form.addButton("添加页面").addButton("复制本书");
-    pl.sendForm(form,(player,id)=>{
-        //handlePageSelection(player,id);
-    });
-    return true;
+    pl.sendForm(form,handlePageSelection);
+    return;
 }
 
 function handlePageSelection(pl,id) {
-    let it = pl.getHand();
-    let data = it.getNbt();
-    let pages = getTag("cords");
     if (id === null) return;
+    let data = pl.getHand().getNbt();
+    let pages = data.getTag("tag").getTag("cords");
     if (id === pages.getSize()-1) {
-        if(data.setTag(pages.addTag(new NbtCompound({
-            "name": new NbtString("第 " + id + " 页" ),
+        if (pages.getSize() === config.get("maxPages")) {
+            unableToAddForm.page(pl);
+            return;
+        }
+        data.getTag("tag").getTag("cords").addTag(new NbtCompound({
+            "name": new NbtString("第 " + id + " 页"),
             "pages": new NbtList([])
-        })))) { 
-            it.setNbt(data) ;
-            handlePageSelection(pl,id,it);
-        } else pl.tell("未知错误");
-        return;
-    } else if (id === pages.getSize()) {
+            }));
+        pl.getHand().setNbt(data);
+        pl.refreshItems();
+    }
+    if (id === pages.getSize()) {
         pl.tell("copy the book")
         // copy the book
         return;
     }
     let form = mc.newSimpleForm();
-    let page = pages.getTag(id);
-    form.setTitle(page.getTag("name").get()).setContent("");
-    for (let i = 0;i < page.getSize();i++) {
-        form.addButton(page.getTag(i))
+    let page = pages.getTag(id).toObject();
+    form.setTitle(page.name).setContent("");
+    for (i in page.data) {
+        form.addButton(page.data[i].name)
     }
-    fm.addButton("添加条目").addButton("重命名页面：" + page.getTag("name").get()).addButton("删除页面");
-    pl.sendForm(form,(player,_id)=>{
-        handleEntrySelection(player,_id,id,it)
-    });
+    fm.addButton("添加条目").addButton("重命名页面：" + page.name).addButton("删除页面");
+    pl.sendForm(form, (player,_id) => console.log(id) /*handleEntrySelection(player,_id,id)*/ );
 }
 
-function handleEntrySelection(pl,id,pageid,it) {
-    let data = it.getNbt();
-    let pages = getTag("cords");
-    let page = pages.getTag(pageid).getTag("data");
+function handleEntrySelection(pl,id,pageid) {
     if (id === null) return;
+    let data = pl.getHand().getNbt();
+    let pages = data.getTag("tag").getTag("cords");
+    let page = pages.getTag(pageid).getTag("data");
     switch (id) {
         case page.getSize() - 2:
-            pl.tell("Add entry");
-            //add entry
+            // Add Entry
+            if (page.getSize() === config.get("maxEntriesPerPage")) {
+                unableToAddForm.entry(pl);
+                return;
+            }
+            data.getTag("tag").getTag("cords").addTag(new NbtCompound({
+                "name": new NbtString("第 " + id + " 页"),
+                "pages": new NbtList([])
+            }));
+            pl.getHand().setNbt(data);
+            pl.refreshItems();
             return;
         case page.getSize() - 1:
             pl.tell("Rename Page");
