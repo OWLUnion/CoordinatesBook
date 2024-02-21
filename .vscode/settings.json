@@ -2,5 +2,8 @@
     "Lua.diagnostics.globals": [
         "File",
         "logger"
-    ]
+    ],
+    "extension.llseaids.libraryPath": "/home/alexxucn/.local/share/llse-aids",
+    "extension.llseaids.sourceUrl": "https://codeberg.org/moixsuki/HelperLib/raw/branch/master/mirror/",
+    "extension.llseaids.bdsPath": "/home/alexxucn/Projects/CoordinatesBook/bds/bedrock_server/"
 }

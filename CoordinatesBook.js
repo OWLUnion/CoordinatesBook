@@ -1,3 +1,15 @@
+// LiteLoader-AIDS automatic generated
+/// <reference path="/home/alexxucn/.local/share/llse-aids/dts/helperlib/src/index.d.ts"/> 
+
+ll.registerPlugin(
+    /* name */ "",
+    /* introduction */ "",
+    /* version */ [0,0,1],
+    /* otherInformation */ null
+); 
+
+
+
 ll.registerPlugin(
     "CoordinatesBook",
     "坐标记录本",
@@ -91,7 +103,8 @@ function showBook(pl) {
     let form = mc.newSimpleForm();
     form.setTitle(it.name).setContent("");
     for (let page in data) form.addButton(data[page].name);
-    form.addButton("添加页面").addButton("复制本书");
+    form.addButton("添加页面")
+        .addButton("复制本书");
     pl.sendForm(form,handlePageSelection);
     return;
 }
@@ -123,7 +136,9 @@ function handlePageSelection(pl,id) {
     for (let entry in page.data) {
         form.addButton(page.data[entry].name)
     }
-    form.addButton("添加条目").addButton("重命名页面：" + page.name).addButton("删除页面");
+    form.addButton("添加条目")
+        .addButton("重命名页面：" + page.name)
+        .addButton("删除页面");
     pl.sendForm(form, (player,_id) => handleEntrySelection(player,_id,id) );
 }
 
@@ -158,11 +173,13 @@ function handleEntrySelection(pl,id,pageid) {
     let form = mc.newSimpleForm();
     let entry = page.getTag(id).toObject();
     form.setTitle(entry.name).setContent(`${entry.name}\n${dimIdToDimName(entry.data[0])} / ${entry.data[1]} ${entry.data[2]} ${entry.data[3]}`);
-    form.addButton("追踪").addButton("重命名").addButton("删除");
+    form.addButton("追踪")
+        .addButton("重命名")
+        .addButton("删除");
     pl.sendForm(form,(player,_id) => {
         switch (_id) {
             case 0:
-                track(pl,
+                track(player,
                     entry.getTag("name").get,
                     entryData.getTag(0).get(),
                     entryData.getTag(1).get(),
@@ -172,14 +189,24 @@ function handleEntrySelection(pl,id,pageid) {
                 return;
             case 1:
                 //rename
-                pl.tell("rename entry")
+                player.tell("rename entry")
                 return;
             case 2:
-                pl.tell("delete")
+                player.tell("delete")
                 //delete
                 return;
         }
     })
+}
+
+function renameEntryForm(pl,pageId,entryId) {
+    let form = mc.newCustomForm();
+    let it = pl.getHand();
+    let data = it.getNbt();
+    let pages = data.getTag("tag").getTag("cords").toArray();
+    form.setTitle(`重命名 ${it.name} > ${pages[pageId].name} > ${pages[pageId].data[entryId].name}`)
+        .addInput("条目名称","",pages[pageId].data[entryId].name)
+        .addButton("确定");pages.getTag(pageId).getTag("data").getTag(entryId).getTag("name");
 }
 
 async function track (pl,name,dim,x,y,z) {
