@@ -32,6 +32,7 @@ const initialPageList = new NbtList([
             new NbtCompound({
                 "name": new NbtString("awa"),
                 "data": new NbtList([
+                    new NbtByte(0),
                     new NbtInt(11),
                     new NbtInt(45),
                     new NbtInt(14)
@@ -44,7 +45,7 @@ const initialPageList = new NbtList([
 mc.listen("onUseItem",useBook);
 
 function dimIdToDimName(dimid) {
-    switch (dim) {
+    switch (dimid) {
         case 0:
             return "主世界";
         case 1:
@@ -119,10 +120,10 @@ function handlePageSelection(pl,id) {
     let form = mc.newSimpleForm();
     let page = pages.getTag(id).toObject();
     form.setTitle(page.name).setContent("");
-    for (i in page.data) {
-        form.addButton(page.data[i].name)
+    for (let entry in page.data) {
+        form.addButton(page.data[entry].name)
     }
-    fm.addButton("添加条目").addButton("重命名页面：" + page.name).addButton("删除页面");
+    form.addButton("添加条目").addButton("重命名页面：" + page.name).addButton("删除页面");
     pl.sendForm(form, (player,_id) => handleEntrySelection(player,_id,id) );
 }
 
@@ -155,9 +156,8 @@ function handleEntrySelection(pl,id,pageid) {
             return;
     }
     let form = mc.newSimpleForm();
-    let entry = page.getTag(id);
-    let entryData = entry.getTag("data")
-    form.setTitle(entry.getTag("name")).setContent(`${entry.getTag("name")}\n${dimIdToDimName(entryData.getTag(0).get())} / ${entryData.getTag(1).get()} ${entryData.getTag(2).get()} ${entryData.getTag(3).get()}`);
+    let entry = page.getTag(id).toObject();
+    form.setTitle(entry.name).setContent(`${entry.name}\n${dimIdToDimName(entry.data[0])} / ${entry.data[1]} ${entry.data[2]} ${entry.data[3]}`);
     form.addButton("追踪").addButton("重命名").addButton("删除");
     pl.sendForm(form,(player,_id) => {
         switch (_id) {
