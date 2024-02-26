@@ -2,15 +2,6 @@
 /// <reference path="/home/alexxucn/.local/share/llse-aids/dts/helperlib/src/index.d.ts"/> 
 
 ll.registerPlugin(
-    /* name */ "",
-    /* introduction */ "",
-    /* version */ [0,0,1],
-    /* otherInformation */ null
-); 
-
-
-
-ll.registerPlugin(
     "CoordinatesBook",
     "坐标记录本",
     [1,0,0,Version.Release],
@@ -142,11 +133,11 @@ function handlePageSelection(pl,id) {
     pl.sendForm(form, (player,_id) => handleEntrySelection(player,_id,id) );
 }
 
-function handleEntrySelection(pl,id,pageid) {
+function handleEntrySelection(pl,id,pageId) {
     if (id === null) return;
     let data = pl.getHand().getNbt();
     let pages = data.getTag("tag").getTag("cords");
-    let page = pages.getTag(pageid).getTag("data");
+    let page = pages.getTag(pageId).getTag("data");
     switch (id) {
         case page.getSize():
             // Add Entry
@@ -188,25 +179,60 @@ function handleEntrySelection(pl,id,pageid) {
                     )
                 return;
             case 1:
-                //rename
-                player.tell("rename entry")
+                renameEntryForm(pl,pageId,_id);
                 return;
             case 2:
                 player.tell("delete")
-                //delete
+                deleteEntryForm(pl,pageId,_id);
                 return;
         }
     })
 }
 
-function renameEntryForm(pl,pageId,entryId) {
+async function renameEntryForm(pl,pageId,entryId) {
     let form = mc.newCustomForm();
     let it = pl.getHand();
     let data = it.getNbt();
     let pages = data.getTag("tag").getTag("cords").toArray();
     form.setTitle(`重命名 ${it.name} > ${pages[pageId].name} > ${pages[pageId].data[entryId].name}`)
         .addInput("条目名称","",pages[pageId].data[entryId].name)
-        .addButton("确定");pages.getTag(pageId).getTag("data").getTag(entryId).getTag("name");
+        .addButton("确定");
+    pl.sendForm(form,(pl,data) => {
+        if (data != null) renameEntry(pl,data[0],pageId,entryId);
+    });
+}
+
+async function renameEntry(pl,name,pageId,entryId) {
+    let data = pl.getHand().getNbt();
+    data.getTag("tag").getTag("cords").getTag(pageId).getTag("data").getTag(entryId).setString("name",name);
+    pl.getHand().setNbt(data);
+    pl.refreshItems();
+    handlePageSelection(pl,pageId);
+}
+
+async function renamePageForm(pl,pageId) {
+    let form = mc.newCustomForm();
+    let it = pl.getHand();
+    let data = it.getNbt();
+    let pages = data.getTag("tag").getTag("cords").toArray();
+    form.setTitle(`重命名 ${it.name} > ${pages[pageId].name}`)
+        .addInput("页面名称","",pages[pageId].name)
+        .addButton("确定");
+    pl.sendForm(form,(pl,data) => {
+        if (data != null) renamePage(pl,data[0],pageId);
+    });
+}
+
+async function renamePage(pl,name,pageId) {
+    let data = pl.getHand().getNbt();
+    data.getTag("tag").getTag("cords").getTag(pageId).setString("name",name);
+    pl.getHand().setNbt(data);
+    pl.refreshItems();
+    showBook(pl);
+}
+
+async function deleteEntryForm(pl,pageId,entryId) {
+    
 }
 
 async function track (pl,name,dim,x,y,z) {
